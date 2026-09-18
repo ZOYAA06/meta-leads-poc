@@ -1,56 +1,87 @@
-# Welcome to your Expo app 👋
+# Meta Lead Ads + React Native PoC
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A Proof of Concept that receives a test lead from Meta Lead Ads and displays it live in an already-open React Native app without any manual action on the device.
 
-## Get started
+## Architecture
 
-1. Install dependencies
+```text
+Meta Lead Testing Tool
+        ↓
+Meta Webhook
+        ↓
+ngrok
+        ↓
+Node.js + Express
+        ↓
+Meta Graph API
+        ↓
+Server-Sent Events (SSE)
+        ↓
+React Native App
+````
 
-   ```bash
-   npm install
-   ```
+When a test lead is submitted, Meta sends a webhook containing the lead ID. The backend retrieves the lead details using the Meta Graph API and sends the lead to the connected React Native app through SSE. The app updates the leads list automatically.
 
-2. Start the app
+## Tech Stack
 
-   ```bash
-   npx expo start
-   ```
+* React Native + Expo
+* TypeScript
+* Node.js + Express
+* Meta Graph API
+* Meta Webhooks
+* Server-Sent Events (SSE)
+* ngrok
 
-In the output, you'll find options to open the app in a
+## Setup
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+### Install dependencies
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+From the project root:
 
 ```bash
-npm run reset-project
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Install backend dependencies:
 
-### Other setup steps
+```bash
+cd backend
+npm install
+```
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+### Environment Variable
 
-## Learn more
+Create a `.env` file inside the `backend` folder:
 
-To learn more about developing your project with Expo, look at the following resources:
+```env
+META_PAGE_ACCESS_TOKEN=your_page_access_token
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+### Run Backend
 
-## Join the community
+```bash
+cd backend
+node index.js
+```
 
-Join our community of developers creating universal apps.
+### Run ngrok
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+```bash
+ngrok http 3000
+```
+
+### Run React Native App
+
+From the project root:
+
+```bash
+npx expo start
+```
+
+## Testing
+
+1. Keep the React Native Leads screen open.
+2. Start the backend and ngrok.
+3. Open the Meta Lead Testing Tool.
+4. Submit a test lead.
+5. The lead appears automatically in the React Native app without any manual action on the device.
